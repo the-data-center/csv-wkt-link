@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const csv = require('csvtojson')
 const wktParse = require('wellknown');
 const _ = require('lodash');
@@ -15,6 +17,7 @@ const argv = require('yargs')
 .alias('k', 'pointfileWKTfield').describe('k', 'Fieldname for the point file WKT field (default: geometry)')
 .alias('f', 'fields').describe('f', 'Comma separated fields to match (default: GEOID)')
 .help('h').alias('h', 'help').showHelpOnFail(true).argv;
+
 if (require.main == module) {
   //command line
   if (argv.p && argv.c) {
@@ -55,7 +58,7 @@ if (require.main == module) {
         match({
           polyfile: featureCollection,
           coordinatesfile: pointFeatureCollection,
-          fields: argv.f || ['GEOID'],
+          fields: argv.f.split(',') || ['GEOID'],
           sync: true
         }, function(err, newFile) {
           if (err && err.length) console.error(err);
