@@ -1,0 +1,18 @@
+{
+  "name": "csv-wkt-link",
+  "version": "1.0.0",
+  "description": "A command line tool to link WKT data in two CSV files based on geographic coordinates",
+  "main": "index.js",
+  "author": "Cody Brumfield",
+  "license": "MIT",
+  "dependencies": {
+    "@turf/boolean-point-in-polygon": "^6.0.1",
+    "csvtojson": "^2.0.10",
+    "wellknown": "^0.5.0",
+    "yargs": "^15.0.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0"
+  }
+}
