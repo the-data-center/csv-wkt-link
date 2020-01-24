@@ -60,6 +60,7 @@ if (require.main == module) {
           polyfile: featureCollection,
           coordinatesfile: pointFeatureCollection,
           fields: argv.f.split(',') || ['GEOID'],
+          reverse: argv.r,
           sync: true
         }, function(err, newFile) {
           if (err && err.length) console.error(err);
@@ -131,6 +132,10 @@ function match(options, callback) {
     })
   })
   if (typeof callback === "function") {
-    callback(err, pointGeoJSON);
+    if (options.reverse) {
+      callback(err, polyGeoJSON);
+    } else {
+      callback(err, pointGeoJSON);
+    }
   }
 }
