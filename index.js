@@ -5,6 +5,7 @@ const wktParse = require('wellknown');
 const _ = require('lodash');
 const turfBooleanPointInPolygon = require('@turf/boolean-point-in-polygon').default;
 
+const version = require('./package.json').version;
 //command line help
 const argv = require('yargs')
 .usage('Link two CSV files by geographic coordinates (WKT format)')
@@ -15,9 +16,12 @@ const argv = require('yargs')
 .alias('q', 'polyfileWKTfield').describe('q', 'Fieldname for the poly file WKT field (default: geometry)')
 .alias('c', 'coordinatesfile').describe('c', 'GeoJSON with coordinates/points to be given correct GEOID. (If it has polygons, the centroid will be used)')
 .alias('k', 'pointfileWKTfield').describe('k', 'Fieldname for the point file WKT field (default: geometry)')
-.alias('f', 'fields').describe('f', 'Comma separated fields to match (default: GEOID)')
-.alias('r', 'reverse').describe('r', 'Copy the data from the point to the polygon instead')
-.help('h').alias('h', 'help').showHelpOnFail(true).argv;
+.array('f').alias('f', 'fields').describe('f', 'Comma separated fields to match (default: GEOID)')
+.boolean('r').alias('r', 'reverse').describe('r', 'Copy the data from the point to the polygon instead')
+.demandOption(['f','p','q','c','k'])
+.version(version)
+.help('h').alias('h', 'help').showHelpOnFail(true)
+.argv;
 
 if (require.main == module) {
   //command line
