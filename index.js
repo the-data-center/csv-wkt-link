@@ -7,20 +7,20 @@ const turfBooleanPointInPolygon = require('@turf/boolean-point-in-polygon').defa
 const yargs = require('yargs');
 const version = require('./package.json').version;
 //command line help
-const argv = require('yargs')
+const argv = yargs
 .usage('Link two CSV files by geographic coordinates (WKT format)')
 .example('$0 -c example/assets.csv -k geo -p example/neighborhood-associations-geo.csv -q the_geom -f OrgName')
 .example('')
-.example('$0 --coordinatesfile example/assets.csv --pointfileWKTfield geo --polyfile example/neighborhood-associations-geo.csv --polyfileWKTfield the_geom --fields OrgName')
+.example('$0 --coordinatesfile example/assets.csv --pointfile-wkt-field geo --polyfile example/neighborhood-associations-geo.csv --polyfile-wkt-field the_geom --fields OrgName')
 .alias('p', 'polyfile').describe('p', 'CSV file with WKT Polygons and GEOID in the properties')
-.alias('q', 'polyfileWKTfield').describe('q', 'Fieldname for the poly file WKT field (default: geometry)')
+.alias('q', 'polyfile-wkt-field').describe('q', 'Fieldname for the poly file WKT field (default: geometry)')
 .alias('c', 'coordinatesfile').describe('c', 'GeoJSON with coordinates/points to be given correct GEOID. (If it has polygons, the centroid will be used)')
-.alias('k', 'pointfileWKTfield').describe('k', 'Fieldname for the point file WKT field (default: geometry)')
-.array('f').alias('f', 'fields').describe('f', 'Comma separated fields to match (default: GEOID)')
-.boolean('r').alias('r', 'reverse').describe('r', 'Copy the data from the point to the polygon instead')
+.alias('k', 'pointfile-wkt-field').describe('k', 'Fieldname for the point file WKT field (default: geometry)')
+.array('f').alias('f', 'fields').describe('f', 'Fields to match, separated by a space (default: GEOID)')
+.boolean('r').alias('r', 'reverse').describe('r', 'Copy the data from the point data to the polygon data instead')
 .wrap(yargs.terminalWidth())
 .demandOption(['f','p','q','c','k'])
-.version(version)
+.version(version).alias('version','v')
 .help('h').alias('h', 'help').showHelpOnFail(true)
 .argv;
 
