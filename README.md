@@ -1,5 +1,10 @@
 # CSV WKT Data Linker
-A NodeJS library to link properties on two different GeoJSON files by determining if a geographic point is within a larger geographic region and linking the metadata. This project is sponsored by [The Data Center of Southeast Louisiana](https://www.datacenterresearch.org)
+A CLI tool for NodeJS that links properties on two different GeoJSON files by determining if a geographic point is within a larger geographic region and then linking the metadata. This project is sponsored by [The Data Center of Southeast Louisiana](https://www.datacenterresearch.org)
+
+## About The Data Center
+[The Data Center of Southeast Louisiana](https://www.datacenterresearch.org) is a fully independent, data-focused non-profit with a mission to build prosperous, inclusive, and sustainable communities by making informed decisions possible. If you find this tool useful, please visit [our web site to learn more](https://www.datacenterresearch.org) about our work and consider [supporting us](https://www.datacenterresearch.org/support-us) in our mission.
+
+##
 
 Link two CSV files by geographic coordinates (WKT format)
 ```

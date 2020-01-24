@@ -4,7 +4,7 @@ const csv = require('csvtojson')
 const wktParse = require('wellknown');
 const _ = require('lodash');
 const turfBooleanPointInPolygon = require('@turf/boolean-point-in-polygon').default;
-
+const yargs = require('yargs');
 const version = require('./package.json').version;
 //command line help
 const argv = require('yargs')
@@ -18,6 +18,7 @@ const argv = require('yargs')
 .alias('k', 'pointfileWKTfield').describe('k', 'Fieldname for the point file WKT field (default: geometry)')
 .array('f').alias('f', 'fields').describe('f', 'Comma separated fields to match (default: GEOID)')
 .boolean('r').alias('r', 'reverse').describe('r', 'Copy the data from the point to the polygon instead')
+.wrap(yargs.terminalWidth())
 .demandOption(['f','p','q','c','k'])
 .version(version)
 .help('h').alias('h', 'help').showHelpOnFail(true)
@@ -63,7 +64,7 @@ if (require.main == module) {
         match({
           polyfile: featureCollection,
           coordinatesfile: pointFeatureCollection,
-          fields: argv.f.split(',') || ['GEOID'],
+          fields: argv.f || ['GEOID'],
           reverse: argv.r,
           sync: true
         }, function(err, newFile) {
