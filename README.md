@@ -24,7 +24,7 @@ Options:
   -h, --help               Show help                                   [boolean]
 
 Examples:
-  index.js -c example/assets.csv -k geo -p example/neighborhood-associations-geo.csv -q the_geom -f OrgName
+  npx csv-wkt-link -c example/assets.csv -k geo -p example/neighborhood-associations-geo.csv -q the_geom -f OrgName
 
-  index.js --coordinatesfile example/assets.csv --pointfileWKTfield geo --polyfile example/neighborhood-associations-geo.csv --polyfileWKTfield the_geom --fields OrgName
+  npx csv-wkt-link --coordinatesfile example/assets.csv --pointfileWKTfield geo --polyfile example/neighborhood-associations-geo.csv --polyfileWKTfield the_geom --fields OrgName
 ```
