@@ -15,9 +15,11 @@ Options:
   -k, --pointfileWKTfield  Fieldname for the point file WKT field (default:
                            geometry)
   -f, --fields             Comma separated fields to match (default: GEOID)
+  -r, --reverse            Copy the data from the point to the polygon instead
   -h, --help               Show help                                   [boolean]
 
 Examples:
-  node index.js -c example/assets.csv -k geo -p example/neighborhood-associations-geo.csv -q the_geom -f OrgName
-  node index.js --coordinatesfile example/assets.csv --pointfileWKTfield geo --polyfile example/neighborhood-associations-geo.csv --polyfileWKTfield the_geom --fields OrgName
+  index.js -c example/assets.csv -k geo -p example/neighborhood-associations-geo.csv -q the_geom -f OrgName
+
+  index.js --coordinatesfile example/assets.csv --pointfileWKTfield geo --polyfile example/neighborhood-associations-geo.csv --polyfileWKTfield the_geom --fields OrgName
 ```

@@ -16,6 +16,7 @@ const argv = require('yargs')
 .alias('c', 'coordinatesfile').describe('c', 'GeoJSON with coordinates/points to be given correct GEOID. (If it has polygons, the centroid will be used)')
 .alias('k', 'pointfileWKTfield').describe('k', 'Fieldname for the point file WKT field (default: geometry)')
 .alias('f', 'fields').describe('f', 'Comma separated fields to match (default: GEOID)')
+.alias('r', 'reverse').describe('r', 'Copy the data from the point to the polygon instead')
 .help('h').alias('h', 'help').showHelpOnFail(true).argv;
 
 if (require.main == module) {
@@ -112,10 +113,18 @@ function match(options, callback) {
           fields = [fields];
         }
         fields.forEach(function(fname) {
-          if (point.properties[fname]) {
-            point.properties[fname] += ','+poly.properties[fname];
+          if (options.reverse) {
+            if (poly.properties[fname]) {
+              poly.properties[fname] += ','+point.properties[fname];
+            } else {
+              poly.properties[fname] = point.properties[fname];
+            }
           } else {
-            point.properties[fname] = poly.properties[fname];
+            if (point.properties[fname]) {
+              point.properties[fname] += ','+poly.properties[fname];
+            } else {
+              point.properties[fname] = poly.properties[fname];
+            }
           }
         })
       }
