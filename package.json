@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A command line tool to link WKT data in two CSV files based on geographic coordinates",
   "main": "index.js",
+  "bin": {
+    "csv-wkt-link": "./index.js"
+  },
   "author": "Cody Brumfield",
   "license": "MIT",
   "repository": {
@@ -10,9 +13,9 @@
     "url": "git+https://github.com/the-data-center/csv-wkt-link.git"
   },
   "keywords": [
-    "geojson",
-    "geography",
-    "geoid"
+    "wkt",
+    "csv",
+    "geography"
   ],
   "author": "Cody Brumfield",
   "license": "MIT",
