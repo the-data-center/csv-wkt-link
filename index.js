@@ -2,8 +2,8 @@
 
 const csv = require('csvtojson')
 const wktParse = require('wellknown');
-const _ = require('lodash');
 const turfBooleanPointInPolygon = require('@turf/boolean-point-in-polygon').default;
+const turfIntersect = require('@turf/intersect').default;
 const yargs = require('yargs');
 const version = require('./package.json').version;
 //command line help
@@ -14,7 +14,7 @@ const argv = yargs
 .example('$0 --coordinatesfile example/assets.csv --pointfile-wkt-field geo --polyfile example/neighborhood-associations-geo.csv --polyfile-wkt-field the_geom --fields OrgName')
 .alias('p', 'polyfile').describe('p', 'CSV file with WKT Polygons and GEOID in the properties')
 .alias('q', 'polyfile-wkt-field').describe('q', 'Fieldname for the poly file WKT field (default: geometry)')
-.alias('c', 'coordinatesfile').describe('c', 'GeoJSON with coordinates/points to be given correct GEOID. (If it has polygons, the centroid will be used)')
+.alias('c', 'coordinatesfile').describe('c', 'CSV with coordinates/points')
 .alias('k', 'pointfile-wkt-field').describe('k', 'Fieldname for the point file WKT field (default: geometry)')
 .array('f').alias('f', 'fields').describe('f', 'Fields to match, separated by a space (default: GEOID)')
 .boolean('r').alias('r', 'reverse').describe('r', 'Copy the data from the point data to the polygon data instead')
@@ -32,7 +32,7 @@ if (require.main == module) {
         "type": "FeatureCollection",
         "features": []
       }
-      _.each(polyData, function(f) {
+      polyData.forEach(function(f) {
         var geom = wktParse(f[argv.q] || f.geometry);
         var props = f;
         delete props.geometry;
@@ -43,13 +43,13 @@ if (require.main == module) {
             "properties": props
           })
         }
-      })
+      });
       csv().fromFile(argv.c).then((pointData) => {
         var pointFeatureCollection = {
           "type": "FeatureCollection",
           "features": []
         }
-        _.each(pointData, function(f) {
+        pointData.forEach(function(f) {
           var geom = wktParse(f[argv.k] || f.geometry);
           var props = f;
           delete props.geometry;
@@ -74,10 +74,6 @@ if (require.main == module) {
             let data = newFile.features;
 
             data.forEach(function(row) {
-              if (row.geometry && row.geometry.type == "Point" && row.geometry.coordinates && row.geometry.coordinates.length > 1) {
-                row.properties.lng = row.geometry.coordinates[0]
-                row.properties.lat = row.geometry.coordinates[1]
-              }
               rows.push(row.properties)
             })
             const items = rows;
@@ -99,8 +95,9 @@ function match(options, callback) {
   var polyGeoJSON = options.polyfile
   var pointGeoJSON = options.coordinatesfile;
   var err = [];
-  var points = pointGeoJSON.features;
-  var polies = polyGeoJSON.features;
+  var points = [...new Set(pointGeoJSON.features)];
+  var polies = [...new Set(polyGeoJSON.features)];
+
   points.forEach(function(point) {
     if (typeof fields === "string") {
       fields = [fields];
@@ -111,25 +108,45 @@ function match(options, callback) {
       }
     })
     polies.forEach(function(poly) {
-      var pt = point;
-      var pol = poly;
-      let isIn = turfBooleanPointInPolygon(pt, pol);
+      let isIn = false;
+      if (point.geometry.type == "Point") {
+        isIn = turfBooleanPointInPolygon(point, poly);
+      } else {
+        isIn = turfIntersect(point,poly);
+      }
       if (isIn) {
         if (typeof fields === "string") {
           fields = [fields];
         }
         fields.forEach(function(fname) {
           if (options.reverse) {
-            if (poly.properties[fname]) {
-              poly.properties[fname] += ','+point.properties[fname];
+            if (poly.properties[fname] && typeof poly.properties[fname] === "string") {
+              poly.properties[fname] = poly.properties[fname].split(',')
+            } else if (poly.properties[fname]) {
+              poly.properties[fname].push(point.properties[fname]);
+              poly.properties[fname] = [...new Set(poly.properties[fname])]
             } else {
-              poly.properties[fname] = point.properties[fname];
+              poly.properties[fname] = [point.properties[fname]];
             }
           } else {
-            if (point.properties[fname]) {
-              point.properties[fname] += ','+poly.properties[fname];
+            if (point.properties[fname] && typeof point.properties[fname] === "string") {
+              point.properties[fname] = point.properties[fname].split(',')
+            } else if (point.properties[fname]) {
+              point.properties[fname].push(poly.properties[fname]);
+              point.properties[fname] = [...new Set(point.properties[fname])]
             } else {
-              point.properties[fname] = poly.properties[fname];
+              point.properties[fname] = [poly.properties[fname]];
+            }
+          }
+        });
+        fields.forEach(function(fname) {
+          if (options.reverse) {
+            if (poly.properties[fname] && poly.properties[fname].length) {
+              poly.properties[fname] = poly.properties[fname].join(',')
+            }
+          } else {
+            if (point.properties[fname] && point.properties[fname].length) {
+              point.properties[fname] = point.properties[fname].join(',')
             }
           }
         })
