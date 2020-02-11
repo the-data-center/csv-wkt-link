@@ -1,6 +1,6 @@
 {
   "name": "csv-wkt-link",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A command line tool to link WKT data in two CSV files based on geographic coordinates",
   "main": "index.js",
   "bin": {
