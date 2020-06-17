@@ -97,7 +97,6 @@ function match(options, callback) {
   var err = [];
   var points = [...new Set(pointGeoJSON.features)];
   var polies = [...new Set(polyGeoJSON.features)];
-
   points.forEach(function(point) {
     if (typeof fields === "string") {
       fields = [fields];
